@@ -4,11 +4,11 @@ server <- function(input, output) {
   output$ma_colonne <- renderTable({
     
     # Nom de la première colonne
-    nom_colonne <- names(donnees)[1]
+    nom_colonne <- names(donnees)
     
     # 5 premières valeurs
     resultat <- data.frame(
-      Colonne = head(donnees[[1]], 5)
+      Colonne = head(donnees)
     )
     
     # Renommer la colonne
