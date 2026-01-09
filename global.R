@@ -1,6 +1,6 @@
 # global.R
 library(shiny)
-library(readxl)
+#library(readxl)
 
 # Charger données
 donnees <- read.csv("data/TableauDonnees.csv",sep=";")
