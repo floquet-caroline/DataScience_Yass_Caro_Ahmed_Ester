@@ -25,7 +25,7 @@ ui <- fluidPage(
              verbatimTextOutput("year_category_summary"),
              br(),
              h4("Formatted data:"),
-             verbatimTextOutput("formatted_data"),
+             tableOutput("formatted_data"),
     )
     
   )
