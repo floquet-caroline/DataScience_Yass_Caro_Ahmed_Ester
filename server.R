@@ -1,6 +1,7 @@
 # server.R
-server <- function(input, output) {
+server <- function(input, output, session) {
   
+  # Existing output for Hello World tab
   output$ma_colonne <- renderTable({
     
     # Nom de la première colonne
@@ -15,6 +16,17 @@ server <- function(input, output) {
     names(resultat) <- nom_colonne
     
     return(resultat)
+  })
+  
+  # Outputs for Decision Trees tab
+  source("R/decision_trees_Caroline.R", local = TRUE)
+  
+  output$decision_tree_table <- renderTable({
+    head(df1, 10)
+  })
+  
+  output$year_category_summary <- renderPrint({
+    table(df1$year_category)
   })
   
 }

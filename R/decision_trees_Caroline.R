@@ -1,6 +1,8 @@
 library(MASS)
 library(dplyr)
-data_banks <- read.csv("./../data/TableauDonnees.csv")
+
+# Use path relative to project root (where global.R is)
+data_banks <- read.csv("data/TableauDonnees.csv",sep=";")
 data_banks
 
 "Formatage des données
