@@ -1,0 +1,249 @@
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+---
+title: "Tests d'hypothèses (Pré vs Post-crise)"
+author: "Ester"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+## Load libraries
+```{r}
+library(dplyr)
+library(ggplot2)
+```
+
+## Function for turning String into Numeric
+```{r}
+to_num <- function(x) as.numeric(gsub(",", ".", x))
+```
+
+
+### List data and parameters
+
+```{r}
+head(donnees)
+names(donnees)
+```
+
+We define different time periods:
+
+Pre-crisis : years 2005–2007
+
+Post-crisis : years 2009–2015
+
+2008 is cut out (year of the crisis)
+
+```{r}
+donnees$year <- to_num(donnees$year)
+
+donnees$period <- NA
+donnees$period[donnees$year <= 2007] <- "Pre-crisis"
+donnees$period[donnees$year >= 2009] <- "Post-crisis"
+
+donnees <- donnees[!is.na(donnees$period), ]
+```
+
+## Distribution of observations
+```{r}
+table(donnees$period)
+table(donnees$year)
+```
+
+## Cut data so that only banks that are in the data before the crisis and after the crisis are in the analysis
+
+```{r}
+banks_pre <- unique(donnees$institution_name[donnees$period == "Pre-crisis"])
+banks_post <- unique(donnees$institution_name[donnees$period == "Post-crisis"])
+
+banks_common <- intersect(banks_pre, banks_post)
+
+donnees_common <- donnees[donnees$institution_name %in% banks_common, ]
+
+table(donnees_common$period)
+table(donnees_common$year)
+
+length(banks_common)
+```
+
+## Conversion en numérique
+
+```{r}
+donnees_common$in_roa    <- to_num(donnees_common$in_roa)
+donnees_common$rt_rwa    <- to_num(donnees_common$rt_rwa)
+donnees_common$in_trade  <- to_num(donnees_common$in_trade)
+donnees_common$ass_trade <- to_num(donnees_common$ass_trade)
+```
+
+
+# H1: Profitability decreased after the crisis
+
+Research hypothesis (H1):
+
+After the 2008 financial crisis, the profitability of European cooperative banks decreased.
+
+Variables tested:
+
+in_roe (Return on Equity, ROE)
+
+in_roa (Return on Assets, ROA)
+
+
+## ROE analysis (in_roe)
+
+```{r}
+roe_pre <- donnees_common$in_roe[donnees_common$period == "Pre-crisis"]
+roe_post <- donnees_common$in_roe[donnees_common$period == "Post-crisis"]
+
+boxplot(roe_pre, roe_post,
+  names = c("Pre", "Post"),
+  main = "ROE before vs after crisis",
+  ylab = "Return on Equity")
+
+wilcox.test(roe_pre, roe_post)
+
+median(roe_pre, na.rm=TRUE)
+median(roe_post, na.rm=TRUE)
+```
+
+## ROA analysis (in_roa)
+
+```{r}
+roa_pre  <- donnees_common$in_roa[donnees_common$period == "Pre-crisis"]
+roa_post <- donnees_common$in_roa[donnees_common$period == "Post-crisis"]
+
+# boxplot
+boxplot(roa_pre, roa_post,
+        names = c("Pre", "Post"),
+        main = "ROA before vs after crisis",
+        ylab = "Return on Assets (ROA)")
+
+# test
+wilcox.test(roa_pre, roa_post)
+
+# medians
+median(roa_pre, na.rm=TRUE)
+median(roa_post, na.rm=TRUE)
+```
+
+# H2: Risk profile changed after the crisis
+
+Research hypothesis (H2):
+
+The 2008 financial crisis led to a significant change in the risk profile of European cooperative banks.
+
+Variable tested:
+
+rt_rwa (Risk-weighted assets ratio)
+
+
+## RWA ratio analysis (rt_rwa)
+
+```{r}
+rwa_pre  <- donnees_common$rt_rwa[donnees_common$period == "Pre-crisis"]
+rwa_post <- donnees_common$rt_rwa[donnees_common$period == "Post-crisis"]
+
+# boxplot
+boxplot(rwa_pre, rwa_post,
+        names = c("Pre", "Post"),
+        main = "RWA ratio before vs after crisis",
+        ylab = "Risk-weighted assets ratio (RWA/Assets)")
+
+# test
+wilcox.test(rwa_pre, rwa_post)
+
+# medians
+median(rwa_pre, na.rm=TRUE)
+median(rwa_post, na.rm=TRUE)
+
+```
+
+# H3: Trading orientation changed after the crisis
+
+Research hypothesis (H3):
+
+After the crisis, European cooperative banks modified their business model by changing their involvement in trading activities.
+
+Variables tested:
+
+ass_trade (Trading assets)
+
+in_trade (Net trading income ratio)
+
+inc_trade (Trading income) #havent done this yet
+
+## Trading ratio analysis (in_trade)
+
+```{r}
+trade_ratio_pre  <- donnees_common$in_trade[donnees_common$period == "Pre-crisis"]
+trade_ratio_post <- donnees_common$in_trade[donnees_common$period == "Post-crisis"]
+
+# boxplot
+boxplot(trade_ratio_pre, trade_ratio_post,
+        names = c("Pre", "Post"),
+        main = "Trading ratio before vs after crisis",
+        ylab = "Net trading income ratio")
+
+# test
+wilcox.test(trade_ratio_pre, trade_ratio_post)
+
+# medians
+median(trade_ratio_pre, na.rm=TRUE)
+median(trade_ratio_post, na.rm=TRUE)
+
+```
+
+## Trading assets analysis (ass_trade)
+
+```{r}
+trade_assets_pre  <- donnees_common$ass_trade[donnees_common$period == "Pre-crisis"]
+trade_assets_post <- donnees_common$ass_trade[donnees_common$period == "Post-crisis"]
+
+# boxplot on LOG scale
+boxplot(log(trade_assets_pre), log(trade_assets_post),
+        names = c("Pre", "Post"),
+        main = "Trading assets before vs after crisis (log scale)",
+        ylab = "log(Trading assets)")
+
+# test (keep original values)
+wilcox.test(trade_assets_pre, trade_assets_post)
+
+# medians
+median(trade_assets_pre, na.rm=TRUE)
+median(trade_assets_post, na.rm=TRUE)
+
+```
+
+## Summary table with medians and p-values
+
+```{r}
+vars <- c("in_roe", "in_roa", "rt_rwa", "in_trade", "ass_trade")
+
+# make sure all values are indeed numeric
+for (v in vars) {
+  donnees_common[[v]] <- to_num(donnees_common[[v]])
+}
+
+results <- data.frame(variable = vars,
+                      median_pre = NA,
+                      median_post = NA,
+                      p_value = NA)
+
+for (i in 1:length(vars)) {
+  v <- vars[i]
+  
+  pre  <- donnees_common[[v]][donnees_common$period == "Pre-crisis"]
+  post <- donnees_common[[v]][donnees_common$period == "Post-crisis"]
+  
+  results$median_pre[i]  <- median(pre, na.rm = TRUE)
+  results$median_post[i] <- median(post, na.rm = TRUE)
+  results$p_value[i] <- wilcox.test(pre, post)$p.value
+}
+
+results
+
+```
+
+
+
