@@ -22,7 +22,10 @@ ui <- fluidPage(
              tableOutput("decision_tree_table"),
              br(),
              h4("Year Categories:"),
-             verbatimTextOutput("year_category_summary")
+             verbatimTextOutput("year_category_summary"),
+             br(),
+             h4("Formatted data:"),
+             verbatimTextOutput("formatted_data"),
     )
     
   )

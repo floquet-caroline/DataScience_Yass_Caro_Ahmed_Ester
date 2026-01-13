@@ -29,4 +29,8 @@ server <- function(input, output, session) {
     table(df1$year_category)
   })
   
+  output$formatted_data <- renderTable({
+    head(df_formatted,10)
+  })
+  
 }
