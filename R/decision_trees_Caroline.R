@@ -20,8 +20,10 @@ df_formatted <- donnees |>
 #seed for reproducibility
 set.seed(123)
 
-#split object (80% training)
-data_split <- initial_split(df_formatted, prop = 0.80)
+#split object (80% training) with strata
+#year categories (before or after 2010-2011) have the same proportion in both datasets
+#that ensures better performance and less bias
+data_split <- initial_split(df_formatted, prop = 0.80, strata = year_category)
 
 #extract train and test datasets
 train_data <- training(data_split)
