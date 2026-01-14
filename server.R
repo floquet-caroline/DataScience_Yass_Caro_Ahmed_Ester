@@ -22,11 +22,7 @@ server <- function(input, output, session) {
   source("R/decision_trees_Caroline.R", local = TRUE)
   
   output$decision_tree_table <- renderTable({
-    head(df1, 10)
-  })
-  
-  output$year_category_summary <- renderPrint({
-    table(df1$year_category)
+    head(donnees, 10)
   })
   
   output$formatted_data <- renderTable({
