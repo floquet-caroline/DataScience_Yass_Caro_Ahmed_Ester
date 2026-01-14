@@ -1,7 +1,7 @@
 # server.R
 library(ggplot2)
 source("R/decision_trees_Caroline.R", local = FALSE)
-server_caroline <- function(input, output, session) {
+server <- function(input, output, session) {
   
   # Outputs for Decision Trees tab
   output$decision_tree_table <- renderTable({
@@ -92,11 +92,6 @@ server_caroline <- function(input, output, session) {
               caption = 'Observations VS Prédictions')
   })
   
-  output$confusion <- renderPrint({
-    #confusion matrix
-    conf_matrix
-  })
-  
   output$confusion_heatmap <- renderPlot({
     # Convert table to dataframe for plotting
     df_conf <- as.data.frame(conf_matrix)
@@ -112,11 +107,6 @@ server_caroline <- function(input, output, session) {
   output$tree_accuracy <- renderText({
     #accuracy
     paste0(round_accuracy, "%")
-  })
-  
-  output$confusion2 <- renderPrint({
-    #confusion matrix
-    conf_matrix_balanced
   })
   
   output$confusion_heatmap2 <- renderPlot({
