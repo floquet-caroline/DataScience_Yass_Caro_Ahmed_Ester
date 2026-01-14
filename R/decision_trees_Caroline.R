@@ -1,4 +1,6 @@
-library(MASS)
+#library(MASS)
+library(rpart)
+library(rpart.plot)
 library(dplyr)
 library(rsample)
 
@@ -14,7 +16,9 @@ df_formatted <- donnees |>
     year >= 2011 ~ "after"
   )) |>
     dplyr::select(-c(X, X.1, X.2, X.3)) |>
-      dplyr::select(-c(year,country_code,institution_name))
+      dplyr::select(-c(year,country_code,institution_name)) |>
+        #force columns (except year_category) to be numeric
+        mutate(across(-year_category, ~as.numeric(gsub(",", ".", .))))
 
 # -- Split data into training and test datasets --
 #seed for reproducibility
@@ -40,4 +44,6 @@ x_test <- test_data |>
 
 y_test <- test_data$year_category
 
-
+#train decision tree
+#cp = pruning (élaguage)
+tree <- rpart(year_category ~ ., data=train_data, method="class", control = rpart.control(cp = 0.005))

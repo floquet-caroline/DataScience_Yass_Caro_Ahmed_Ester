@@ -23,6 +23,10 @@ ui <- fluidPage(
              br(),
              h4("Formatted data:"),
              tableOutput("formatted_data"),
+             br(),
+             h4("Decision tree training:"),
+             plotOutput("tree_training", height = "800px"),
+             plotOutput("importance_plot")
     )
     
   )
