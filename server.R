@@ -1,5 +1,5 @@
 # server.R
-server <- function(input, output, session) {
+server_caroline <- function(input, output, session) {
   
   # Existing output for Hello World tab
   output$ma_colonne <- renderTable({

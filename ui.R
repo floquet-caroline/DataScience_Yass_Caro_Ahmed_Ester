@@ -1,5 +1,5 @@
 # ui.R
-ui <- fluidPage(
+ui_caroline <- fluidPage(
   
   # Add a tab structure that wraps everything
   tabsetPanel(
