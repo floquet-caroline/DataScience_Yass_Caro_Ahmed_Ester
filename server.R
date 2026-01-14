@@ -63,4 +63,18 @@ server <- function(input, output, session) {
             main = "Variable Importance")
   })
   
+  output$test_predictions <- renderPrint({
+    #make predictions
+    predictions
+  })
+  
+  output$confusion <- renderPrint({
+    #confusion matrix
+    conf_matrix
+  })
+  
+  output$tree_accuracy <- renderText({
+    #accuracy
+    paste0(round_accuracy, "%")
+  })
 }

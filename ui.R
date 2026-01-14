@@ -16,17 +16,23 @@ ui <- fluidPage(
     
     # Decision Trees analysis
     tabPanel("Decision Trees",
-             h3("Decision Trees Analysis"),
+             h2("Decision Trees Analysis"),
              br(),
-             h4("Data Summary:"),
+             h4("Data Summary"),
              tableOutput("decision_tree_table"),
              br(),
-             h4("Formatted data:"),
+             h4("Formatted data"),
              tableOutput("formatted_data"),
              br(),
-             h4("Decision tree training:"),
+             h3("Decision tree training"),
              plotOutput("tree_training", height = "800px"),
-             plotOutput("importance_plot")
+             plotOutput("importance_plot"),
+             h3("Predicting (test dataset)"),
+             verbatimTextOutput("test_predictions"),
+             h4("Confusion matrix"),
+             verbatimTextOutput("confusion"),
+             h4("Accuracy"),
+             textOutput("tree_accuracy")
     )
     
   )

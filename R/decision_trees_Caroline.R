@@ -1,13 +1,7 @@
-#library(MASS)
 library(rpart)
 library(rpart.plot)
 library(dplyr)
 library(rsample)
-
-"Formatage des données
-agrégation des années en “Avant crise” et “Après crise” (Avant crise : 2005-2010 ; Après crise : 2011-2015 car ce sont des banques européennes qui ont donc subi le krach boursier de 2008 avec un peu de retard + des autres trucs)
-création d’un nouveau dataframe avec seulement les variables intéressantes (aka retirer les colonnes vides et le nom de la banque qui n’est pas pertinent)
-définition des sets de training, validation et test"
 
 # -- Data cleaning/formatting --
 df_formatted <- donnees |>
@@ -47,3 +41,13 @@ y_test <- test_data$year_category
 #train decision tree
 #cp = pruning (élaguage)
 tree <- rpart(year_category ~ ., data=train_data, method="class", control = rpart.control(cp = 0.005))
+
+#prédiction
+predictions <- predict(tree, test_data, type = "class")
+
+#confusion matrix and accuracy
+conf_matrix <- table(Predicted = predictions, Actual = test_data$year_category)
+
+accuracy <- sum(diag(conf_matrix)) / sum(conf_matrix)
+round_accuracy <- round(accuracy * 100, 2)
+
