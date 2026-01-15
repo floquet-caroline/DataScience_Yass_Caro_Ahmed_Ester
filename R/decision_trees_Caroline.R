@@ -45,7 +45,7 @@ y_test <- test_data$year_category
 #cp = pruning (élaguage)
 tree <- rpart(year_category ~ ., data=train_data, method="class", control = rpart.control(cp = 0.005))
 
-#prédiction
+#predictions in class and probability
 predictions <- predict(tree, test_data, type = "class")
 prob_predictions <- predict(tree, test_data, type = "prob")
 
