@@ -1,18 +1,14 @@
 # ui.R
-ui <- fluidPage(
+ui <- navbarPage(
+  title = "Analyse Bancaire 2005-2015",
+  theme = bs_theme(bootswatch = "flatly"),
   
-  # Hello World
-  h1("Hello World !", 
-     style = "color: red; font-size: 40px; text-align: center;"),
+  # Ton onglet (défini dans partieyassine.R)
+  ui_yassine,
   
-  # Petit espace
-  br(),
-  br(),
+  ui_ahmed,
   
-  # Titre du tableau
-  h4("Première colonne du tableau :"),
+  ui_caroline,
   
-  # Tableau
-  tableOutput("ma_colonne")
   
 )

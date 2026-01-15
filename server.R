@@ -1,20 +1,10 @@
 # server.R
-server <- function(input, output) {
+server <- function(input, output, session) {
   
-  output$ma_colonne <- renderTable({
-    
-    # Nom de la première colonne
-    nom_colonne <- names(donnees)
-    
-    # 5 premières valeurs
-    resultat <- data.frame(
-      Colonne = head(donnees)
-    )
-    
-    # Renommer la colonne
-    names(resultat) <- nom_colonne
-    
-    return(resultat)
-  })
+  # Appel de ta logique clustering
+  server_yassine(input, output, session)
+  server_ahmed(input, output, session)
+  server_caroline(input, output, session)
   
+  # Ici viendront les appels pour les autres étudiants
 }
